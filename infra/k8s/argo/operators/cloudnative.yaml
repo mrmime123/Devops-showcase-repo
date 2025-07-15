@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudnative-operator
+  namespace: argocd
+spec:
+  project: control-plane
+  source:
+    repoURL: https://cloudnative-pg.io/charts/
+    targetRevision: 0.24.0
+    chart: cloudnative-pg
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cloudnative-pg
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

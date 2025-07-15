@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+spec:
+  project: control-plane
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: grafana
+    targetRevision: 9.2.10
+    helm:
+      valuesObject:
+        replicas: 1
+        nodeSelector:
+          cloud.google.com/gke-spot: "true"
+        # TODO

@@ -1,0 +1,18 @@
+# StorageClass definition for Kubernetes using the Filestore CSI driver on GKE.
+# - Name: standard-rwo
+# - Provisioner: filestore.csi.storage.gke.io (Google Filestore CSI)
+# - Volume Binding Mode: Immediate (volumes are bound as soon as a PersistentVolumeClaim is created)
+# - Allow Volume Expansion: true (volumes can be resized after creation)
+# - Parameters:
+#     - tier: standard (specifies the Filestore tier)
+#     - network: control-plane (specifies the network used for Filestore)
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: standard-rwo
+provisioner: filestore.csi.storage.gke.io
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+parameters:
+  tier: standard
+  network: control-plane

@@ -1,0 +1,77 @@
+# ====================
+# General
+# ====================
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
+*.swp
+.env
+.env.*
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+venv/
+.env
+tests/
+
+
+# ====================
+# Node.js / Frontend
+# ====================
+/frontend/node_modules
+/frontend/dist
+/frontend/.vite
+/frontend/.parcel-cache
+/frontend/.next
+/frontend/.turbo
+/frontend/build
+/frontend/coverage
+/frontend/yarn-error.log
+/frontend/npm-debug.log
+/frontend/pnpm-lock.yaml
+
+# Optional IDE-related folders
+/frontend/.idea
+/frontend/.vscode
+
+# ====================
+# Python / Backend
+# ====================
+/backend/__pycache__/
+/backend/*.py[cod]
+/backend/*.egg-info/
+/backend/.pytest_cache/
+/backend/.mypy_cache/
+/backend/instance/
+/backend/.env
+/backend/.venv
+/backend/venv
+/backend/env
+/backend/.vscode
+/backend/db.sqlite3
+/backend/migrations/__pycache__/
+/backend/alembic/__pycache__/
+/backend/__pypackages__/
+/backend/.coverage
+/backend/coverage.xml
+/backend/htmlcov/
+/backend/.ruff_cache
+
+# ====================
+# Global IDE/editor files
+# ====================
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# ====================
+# Database files
+# ====================
+*.db
+

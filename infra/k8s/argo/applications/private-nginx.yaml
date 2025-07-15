@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: private-nginx
+  namespace: argocd
+spec:
+  project: control-plane
+  source:
+    chart: ingress-nginx
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.13.0
+    helm:
+      valuesObject:
+        controller:
+          nodeSelector:
+            cloud.google.com/gke-spot: "true"
+          metrics:
+            enabled: true
+            service:
+              annotations:
+                prometheus.io/scrape: "true"
+                prometheus.io/port: "10254"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: private-nginx
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

@@ -1,0 +1,19 @@
+{{- if .Values.global.postgresqlHa.enabled }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "backend.fullname" . }}-postgresql-ha
+  namespace: {{ .Release.Namespace }}
+spec:
+  instances: {{ .Values.global.postgresqlHa.instances }}
+  bootstrap:
+    initdb:
+      database: {{ .Values.global.postgresqlHa.database }}
+      owner: {{ .Values.global.postgresqlHa.owner }}
+      secret:
+        name: {{ include "backend.fullname" . }}-postgresql
+      postInitApplicationSQL:
+        - CREATE SCHEMA IF NOT EXISTS {{ .Values.global.postgresqlHa.schema }};
+        - GRANT ALL PRIVILEGES ON SCHEMA {{ .Values.global.postgresqlHa.schema }} TO {{ .Values.global.postgresqlHa.owner }};
+        
+{{- end }}

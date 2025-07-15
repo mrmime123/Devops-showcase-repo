@@ -1,0 +1,83 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: harbor
+  namespace: argocd
+spec:
+  project: control-plane
+  source:
+    chart: harbor
+    repoURL: https://helm.goharbor.io
+    targetRevision: 1.17.1
+    helm:
+      valuesObject:
+        nodeSelector:
+          cloud.google.com/gke-spot: "true"
+        expose:
+          type: ingress
+          ingress:
+            hosts:
+              core: harbor.test.com
+            controller: default
+            className: private-nginx
+        externalURL: https://harbor.test.com
+        persistence:
+          enabled: true
+          persistentVolumeClaim:
+            registry:
+              storageClassName: standard-rwo
+              size: 10Gi
+            jobservice:
+              storageClassName: standard-rwo
+              size: 10Gi
+            database:
+              storageClassName: standard-rwo
+              size: 10Gi
+            redis:
+              storageClassName: standard-rwo
+              size: 10Gi
+            trivy:
+              storageClassName: standard-rwo
+              size: 10Gi
+          imageChartsStorage:
+            type: gcs
+            gcs:
+              bucket: harbor-images
+              useworkloadIdentity: true
+        portal:
+          replicas: 1
+          nodeSelector:
+            cloud.google.com/gke-spot: "true"
+        core:
+          replicas: 1
+          nodeSelector:
+            cloud.google.com/gke-spot: "true"
+        jobservice:
+          replicas: 1
+          nodeSelector:
+            cloud.google.com/gke-spot: "true"
+        registry:
+          replicas: 1
+          nodeSelector:
+            cloud.google.com/gke-spot: "true"
+        redis:
+          internal:
+            nodeSelector:
+              cloud.google.com/gke-spot: "true"
+        trivy:
+          replicas: 1
+          nodeSelector:
+            cloud.google.com/gke-spot: "true"
+        database:
+          internal:
+            nodeSelector:
+              cloud.google.com/gke-spot: "true"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: harbor
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
