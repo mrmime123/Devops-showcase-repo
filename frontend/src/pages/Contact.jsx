@@ -1,18 +1,35 @@
-import React, { useState } from 'react'
+// frontend/src/Contact.js
+
+import React, { useState } from 'react';
+import { sendContactForm } from '../api/contactApi';
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [loading, setLoading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // Aquí podrías integrar EmailJS, Formspree o backend propio
-    alert('Mensaje enviado. ¡Gracias por contactarme!')
-    setForm({ name: '', email: '', message: '' })
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setStatusMessage(''); // Limpia mensajes de estado anteriores
+
+    try {
+      // Llama a la función desacoplada para enviar los datos
+      await sendContactForm(form);
+      setStatusMessage('✅ Mensaje enviado correctamente. ¡Gracias por contactarme!');
+      setForm({ name: '', email: '', message: '' }); // Limpia el formulario
+    } catch (error) {
+      // Maneja los errores que vienen de contactApi.js
+      setStatusMessage(`❌ Error al enviar el mensaje: ${error.message}. Por favor, intenta de nuevo.`);
+      console.error('Error al manejar el envío del formulario en el componente:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-16 text-gray-800 dark:text-gray-100">
@@ -39,6 +56,7 @@ const Contact = () => {
               className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
               value={form.name}
               onChange={handleChange}
+              disabled={loading}
             />
           </div>
 
@@ -54,6 +72,7 @@ const Contact = () => {
               className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
               value={form.email}
               onChange={handleChange}
+              disabled={loading}
             />
           </div>
 
@@ -69,19 +88,27 @@ const Contact = () => {
               className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
               value={form.message}
               onChange={handleChange}
+              disabled={loading}
             ></textarea>
           </div>
 
           <button
             type="submit"
             className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-lg transition duration-300"
+            disabled={loading}
           >
-            Enviar mensaje
+            {loading ? 'Enviando...' : 'Enviar mensaje'}
           </button>
         </form>
+
+        {statusMessage && (
+          <p className={`mt-6 text-center text-lg ${statusMessage.startsWith('✅') ? 'text-green-500' : 'text-red-500'}`}>
+            {statusMessage}
+          </p>
+        )}
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;

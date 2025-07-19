@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.init_data import init_db  # Importamos la función de inicialización de la base de datos
 
-from backend.api import experience_api, skills_api  # Importamos los routers modularizados
+from backend.api import experience_api, skills_api, contact_api  # Importamos los routers modularizados
 
 app = FastAPI()
 
@@ -20,3 +20,4 @@ app.add_middleware(
 # Incluir routers con prefijos y tags para la documentación
 app.include_router(experience_api.router, prefix="/api/experiences", tags=["experiences"])
 app.include_router(skills_api.router, prefix="/api/skills", tags=["skills"])
+app.include_router(contact_api.router, prefix="/api/contact", tags=["contact"])

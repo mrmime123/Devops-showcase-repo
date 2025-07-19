@@ -9,6 +9,12 @@ RUN npm install
 
 # Copiar el resto del código fuente desde el contexto raíz
 COPY frontend/ ./
+
+# Declara el argumento de construcción
+ARG VITE_API_BASE_URL
+# Establece la variable de entorno que Vite usará durante la construcción
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+# Construir la aplicación
 RUN npm run build
 
 # Etapa 2: Servir con Nginx
